@@ -7,5 +7,6 @@ py -3.10 -m uv venv venv
 .\venv\Scripts\Activate.ps1
 
 nvcc --version
+nvidia-smi
 https://pytorch.org/get-started/locally/
 uv pip install torch torchvision --index-url https://download.pytorch.org/whl/cu130
