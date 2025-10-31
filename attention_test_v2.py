@@ -69,3 +69,22 @@ class SelfAttention_v2(nn.Module):
 torch.manual_seed(789)
 sa_v2 = SelfAttention_v2(d_in, d_out)
 print(sa_v2(inputs))
+
+## 코잘 어텐션 마스크 적용하기 ##
+queries = sa_v2.W_query(inputs)
+keys = sa_v2.W_key(inputs)
+attn_scores = queries @ keys.T
+
+attn_weights = torch.softmax(attn_scores / keys.shape[-1]**0.5, dim=-1)
+print(attn_weights)
+
+## 미래 단어를 참조하지 못하도록 마스킹 처리
+context_length = attn_scores.shape[0]
+
+# Upper triangular matrix 생성
+mask = torch.triu(torch.ones(context_length, context_length), diagonal=1)
+masked = attn_scores.masked_fill(mask.bool(), -torch.inf)
+print(masked)
+
+attn_weights = torch.softmax(masked / keys.shape[-1]**0.5, dim=-1)
+print(attn_weights)
